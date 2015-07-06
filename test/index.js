@@ -16,23 +16,30 @@ var i18n = require('..');
 describe('koa-i18n', function() {
 
   describe('Detect the Querystring', function() {
-    it('should be `en` locale', function(done) {
-      var app = koa();
+    var app = koa();
 
-      locale(app);
+    locale(app);
 
-      app.use(i18n(app, {
-        directory: __dirname + '/fixtures/locales',
-        locales: ['zh-CN', 'en'],
-        modes: ['query']
-      }));
+    app.use(i18n(app, {
+      directory: __dirname + '/fixtures/locales',
+      locales: ['zh-CN', 'en'],
+      modes: ['query']
+    }));
 
-      app.use(function*(next) {
-        this.body = this.i18n.__("locales.en");
-      });
+    app.use(function*(next) {
+      this.body = this.i18n.__("locales.en");
+    });
 
+    it('should be `en` locale when exact', function(done) {
       request(app.listen())
         .get('/?locale=en')
+        .expect(/english/i)
+        .expect(200, done);
+    });
+
+    it('should be `en` locale when territory differs', function(done) {
+      request(app.listen())
+        .get('/?locale=en-US')
         .expect(/english/i)
         .expect(200, done);
     });
@@ -102,49 +109,65 @@ describe('koa-i18n', function() {
   });
 
   describe('Dected the header', function() {
+    var app = koa();
+
+    locale(app);
+
+    app.use(i18n(app, {
+      directory: __dirname + '/fixtures/locales',
+      locales: ['zh-CN', 'en', 'zh-tw'],
+      modes: ['header']
+    }));
+
+    app.use(function*(next) {
+      this.body = this.i18n.__("locales.zh-CN");
+    });
+
     it('should be `zh-tw` locale', function(done) {
-      var app = koa();
-
-      locale(app);
-
-      app.use(i18n(app, {
-        directory: __dirname + '/fixtures/locales',
-        locales: ['zh-CN', 'en', 'zh-tw'],
-        modes: ['header']
-      }));
-
-      app.use(function*(next) {
-        this.body = this.i18n.__("locales.zh-CN");
-      });
-
       request(app.listen())
         .get('/')
         .set('Accept-Language', 'zh-TW')
         .expect(/簡體中文/)
         .expect(200, done);
     });
+
+    it('should be `en` locale when territory differs', function(done) {
+      request(app.listen())
+        .get('/')
+        .set('Accept-Language', 'en-US')
+        .expect(/Chinese\(Simplified\)/)
+        .expect(200, done);
+    });
   });
 
   describe('Detect the cookie', function() {
+    var app = koa();
+
+    locale(app);
+
+    app.use(i18n(app, {
+      directory: __dirname + '/fixtures/locales',
+      locales: ['zh-CN', 'en', 'zh-tw'],
+      modes: ['cookie']
+    }));
+
+    app.use(function*(next) {
+      this.body = this.i18n.__("locales.zh-CN");
+    });
+
     it('should be `zh-cn` locale', function(done) {
-      var app = koa();
-
-      locale(app);
-
-      app.use(i18n(app, {
-        directory: __dirname + '/fixtures/locales',
-        locales: ['zh-CN', 'en', 'zh-tw'],
-        modes: ['cookie']
-      }));
-
-      app.use(function*(next) {
-        this.body = this.i18n.__("locales.zh-CN");
-      });
-
       request(app.listen())
         .get('/')
         .set('Cookie', 'locale=zh-cn')
         .expect(/简体中文/)
+        .expect(200, done);
+    });
+
+    it('should be `en` locale when territory differs', function(done) {
+      request(app.listen())
+        .get('/')
+        .set('Cookie', 'locale=en-AU')
+        .expect(/Chinese\(Simplified\)/)
         .expect(200, done);
     });
   });
@@ -161,7 +184,7 @@ describe('koa-i18n', function() {
         modes: ['cookie']
       }));
 
-      render(app, {
+      app.context.render = render({
         root: __dirname + '/fixtures/',
         ext: 'html'
       });
@@ -244,6 +267,15 @@ describe('koa-i18n', function() {
         .set('Cookie', 'locale=zh-cn')
         .set('Accept-Language', 'en')
         .expect(/简体中文/)
+        .expect(200, done);
+    });
+
+    it('should be `en` locale when territory differs', function(done) {
+      request(app.listen())
+        .get('/')
+        .set('Cookie', 'locale=en-US')
+        .set('Accept-Language', 'zh-TW')
+        .expect(/Chinese\(Simplified\)/)
         .expect(200, done);
     });
   });

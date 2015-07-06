@@ -1,6 +1,6 @@
 {
-  "name": "koa-i18n",
-  "version": "1.1.0",
+  "name": "koa-i18n-2",
+  "version": "1.2.0",
   "description": "Lightweight simple translation middleware for koa, based on i18n-2",
   "main": "index.js",
   "scripts": {
@@ -16,9 +16,10 @@
   "author": "Fangdun Cai <cfddream@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "debug": "*",
-    "i18n-2": "*",
-    "utils-merge": "*"
+    "debug": "^2.2.0",
+    "i18n-2": "^0.4.6",
+    "negotiator": "^0.5.3",
+    "utils-merge": "^1.0.0"
   },
   "devDependencies": {
     "jade": "*",

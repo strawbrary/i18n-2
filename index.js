@@ -14,6 +14,7 @@
 var debug = require('debug')('koa:i18n');
 var mixin = require('utils-merge');
 var i18n2 = require('i18n-2');
+var preferredLanguages = require('negotiator/lib/language');
 
 /**
  * Hacked i18n.
@@ -43,9 +44,26 @@ var GET_PREFIX = 'getLocaleFrom';
 localeMethods.forEach(function (m) {
   Object.defineProperty(I18n.prototype, SET_PREFIX + m, {
     value: function () {
-      var locale = getLocale(this.request[GET_PREFIX + m]());
-      if (locale === this.getLocale().toLowerCase()) return true;
-      if ((locale = filter(locale, this.locales))) {
+      var locale;
+      var availableLanguages = Object.keys(this.locales);
+
+      // If method is header, use Koa's built-in language negotiator so we get the closest
+      // match rather than going back to default if it's not an exact match
+      if (m === 'Header') {
+        locale = this.request.acceptsLanguages(availableLanguages);
+      } else {
+        locale = this.request[GET_PREFIX + m]();
+      }
+
+      if (!locale) {
+        return false;
+      }
+
+      var preferredLanguage = preferredLanguages(locale, availableLanguages);
+      locale = preferredLanguage && preferredLanguage[0] || '';
+
+      if (locale.toLowerCase() === this.getLocale().toLowerCase()) return true;
+      if (locale) {
         this.setLocale(locale);
         debug('Overriding locale from %s : %s', m.toLowerCase(), locale);
         return true;
@@ -113,17 +131,4 @@ function registerMethods(helpers, i18n) {
     };
   });
   return helpers;
-}
-
-function getLocale(locale) {
-  return (locale || '').toLowerCase();
-}
-
-function filter(locale, locales) {
-  for (var k in locales) {
-    if (locale === k.toLowerCase()) {
-      return k;
-    }
-  }
-  return null;
 }
