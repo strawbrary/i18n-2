@@ -1,19 +1,22 @@
-# koa-i18n
+# koa-i18n-2
 
-> I18n fro koa, based on [i18n-2].
-> **NOTE**: If want to use koa-i18n, [koa-locale] must be requred!
+> I18n for koa, based on [i18n-2].
+> **NOTE**: If want to use koa-i18n-2, [koa-locale] must be required!
 
 [![NPM version][npm-img]][npm-url]
 [![Build status][travis-img]][travis-url]
-[![Test coverage][coveralls-img]][coveralls-url]
 [![License][license-img]][license-url]
 [![Dependency status][david-img]][david-url]
 
+### Differences with koa-i18n
+
+koa-i18n-2 will attempt to find the best match from the supported locales, whereas koa-i18n will only find exact matches.
+For example, if a user requests `es-MX` and you support `['en-US', 'es-ES']`, koa-i18n will use `en-US`, while koa-i18n-2 will use `es-ES`.
 
 ### Installation
 
 ```bash
-$ npm install koa-i18n
+$ npm install koa-i18n-2
 ```
 
 ### Usage
@@ -22,19 +25,19 @@ $ npm install koa-i18n
 var app = require('koa')();
 var locale = require('koa-locale'); //  detect the locale
 var render = require('koa-swig');   //  swig render
-var i18n = require('koa-i18n');
+var i18n = require('koa-i18n-2');
 
 // Required!
 locale(app);
 
-render(app, {
+app.context.render = render({
   root: __dirname + '/views/',
   ext: 'html'
 });
 
 app.use(i18n(app, {
   directory: './config/locales',
-  locales: ['zh-CN', 'en'], //  `zh-CN` defualtLocale, must match the locales to the filenames
+  locales: ['zh-CN', 'en'], //  `zh-CN` defaultLocale, must match the locales to the filenames
   modes: [
     'query',                //  optional detect querystring - `/?locale=en-US`
     'subdomain',            //  optional detect subdomain   - `zh-CN.koajs.com`
@@ -55,29 +58,32 @@ app.use(function *(next) {
 ```
 
 > **Tip**: We can change position of the elements in the `modes` array.
-> If one mode is detected, no continue to detect.
+> If one mode finds a match, the modes after it will be ignored.
 
 
 ### Dependencies
 
+* [debug][]
 * [i18n-2][]
 * [koa-locale][] - Get locale variable from query, subdomain, accept-languages or cookie
-
+* [negotiator][]
+* [utils-merge][]
 
 ### License
 
   MIT
 
+[debug]: https://github.com/visionmedia/debug
 [i18n-2]: https://github.com/jeresig/i18n-node-2
 [koa-locale]: https://github.com/koa-modules/koa-locale
+[negotiator]: https://github.com/jshttp/negotiator
+[utils-merge]: https://github.com/jaredhanson/utils-merge
 
-[npm-img]: https://img.shields.io/npm/v/koa-i18n.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/koa-i18n
-[travis-img]: https://img.shields.io/travis/koa-modules/i18n.svg?style=flat-square
-[travis-url]: https://travis-ci.org/koa-modules/i18n
-[coveralls-img]: https://img.shields.io/coveralls/koa-modules/i18n.svg?style=flat-square
-[coveralls-url]: https://coveralls.io/r/koa-modules/i18n?branch=master
+[npm-img]: https://img.shields.io/npm/v/koa-i18n-2.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/koa-i18n-2
+[travis-img]: https://img.shields.io/travis/strawbrary/koa-i18n-2.svg?style=flat-square
+[travis-url]: https://travis-ci.org/strawbrary/koa-i18n-2
 [license-img]: https://img.shields.io/badge/license-MIT-green.svg?style=flat-square
 [license-url]: LICENSE
-[david-img]: https://img.shields.io/david/koa-modules/i18n.svg?style=flat-square
-[david-url]: https://david-dm.org/koa-modules/i18n
+[david-img]: https://img.shields.io/david/strawbrary/koa-i18n-2.svg?style=flat-square
+[david-url]: https://david-dm.org/strawbrary/koa-i18n-2
