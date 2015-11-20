@@ -18,8 +18,7 @@
   "dependencies": {
     "debug": "^2.2.0",
     "i18n-2": "^0.6.0",
-    "negotiator": "^0.6.0",
-    "utils-merge": "^1.0.0"
+    "negotiator": "^0.6.0"
   },
   "devDependencies": {
     "jade": "*",

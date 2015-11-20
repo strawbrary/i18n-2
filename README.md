@@ -61,24 +61,9 @@ app.use(function *(next) {
 > **Tip**: We can change position of the elements in the `modes` array.
 > If one mode finds a match, the modes after it will be ignored.
 
-
-### Dependencies
-
-* [debug][]
-* [i18n-2][]
-* [koa-locale][] - Get locale variable from query, subdomain, accept-languages or cookie
-* [negotiator][]
-* [utils-merge][]
-
 ### License
 
   MIT
-
-[debug]: https://github.com/visionmedia/debug
-[i18n-2]: https://github.com/jeresig/i18n-node-2
-[koa-locale]: https://github.com/koa-modules/koa-locale
-[negotiator]: https://github.com/jshttp/negotiator
-[utils-merge]: https://github.com/jaredhanson/utils-merge
 
 [npm-img]: https://img.shields.io/npm/v/koa-i18n-2.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/koa-i18n-2

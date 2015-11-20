@@ -11,8 +11,7 @@
  * Module dependencies.
  */
 
-var debug = require('debug')('koa:i18n');
-var mixin = require('utils-merge');
+var debug = require('debug')('koa:i18n2');
 var i18n2 = require('i18n-2');
 var preferredLanguages = require('negotiator/lib/language');
 
@@ -36,9 +35,8 @@ function I18n(opts) {
   });
 }
 
-mixin(I18n, i18n2);
-
-I18n.prototype = Object.create(i18n2.prototype);
+Object.setPrototypeOf(I18n, i18n2);
+Object.setPrototypeOf(I18n.prototype, i18n2.prototype);
 
 var localeMethods = [ 'Subdomain', 'Cookie', 'Header', 'Query', 'Url', 'TLD' ];
 var SET_PREFIX = 'setLocaleFrom';
