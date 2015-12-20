@@ -67,7 +67,7 @@ app.use(function *(next) {
 
 [npm-img]: https://img.shields.io/npm/v/koa-i18n-2.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/koa-i18n-2
-[travis-img]: https://img.shields.io/travis/strawbrary/koa-i18n-2.svg?style=flat-square
+[travis-img]: https://img.shields.io/travis/strawbrary/koa-i18n-2/master.svg?style=flat-square
 [travis-url]: https://travis-ci.org/strawbrary/koa-i18n-2
 [license-img]: https://img.shields.io/badge/license-MIT-green.svg?style=flat-square
 [license-url]: LICENSE
